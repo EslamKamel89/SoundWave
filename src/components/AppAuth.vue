@@ -1,6 +1,6 @@
 <template>
   <!-- Auth Modal -->
-  <div class="fixed z-10 inset-0 overflow-y-auto hidden" id="modal">
+  <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" :class="[hiddenClass]">
     <div
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
@@ -20,7 +20,7 @@
           <div class="flex justify-between items-center pb-4">
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
-            <div class="modal-close cursor-pointer z-50">
+            <div class="modal-close cursor-pointer z-50" @click="toggleModal">
               <i class="fas fa-times"></i>
             </div>
           </div>
@@ -141,4 +141,8 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useModalStore } from '@/stores/modal';
+import { toRefs } from 'vue';
+const { hiddenClass, toggleModal } = toRefs(useModalStore());
+</script>
