@@ -27,20 +27,34 @@
 
           <!-- Tabs -->
           <ul class="flex flex-wrap mb-4">
-            <li class="flex-auto text-center">
-              <a
-                class="block rounded py-3 px-4 transition hover:text-white text-white bg-blue-600"
-                href="#"
-                >Login</a
+            <li
+              class="flex-auto text-center cursor-pointer"
+              @click.prevent="handleTapChange('login')"
+            >
+              <div
+                class="block rounded py-3 px-4 transition"
+                :class="{
+                  'hover:text-white text-white bg-blue-600': tab == 'login',
+                  'hover:text-blue-500': tab != 'login',
+                }"
               >
+                Login
+              </div>
             </li>
-            <li class="flex-auto text-center">
-              <a class="block rounded py-3 px-4 transition" href="#">Register</a>
+            <li
+              class="flex-auto text-center cursor-pointer"
+              @click.prevent="handleTapChange('register')"
+              :class="{
+                'hover:text-white text-white bg-blue-600': tab == 'register',
+                'hover:text-blue-500': tab != 'register',
+              }"
+            >
+              <div class="block rounded py-3 px-4 transition">Register</div>
             </li>
           </ul>
 
           <!-- Login Form -->
-          <form>
+          <form v-show="tab == 'login'">
             <!-- Email -->
             <div class="mb-3">
               <label class="inline-block mb-2">Email</label>
@@ -67,7 +81,7 @@
             </button>
           </form>
           <!-- Registration Form -->
-          <form>
+          <form v-show="tab == 'register'">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -142,7 +156,13 @@
 </template>
 
 <script setup lang="ts">
+import { pr } from '@/pr';
 import { useModalStore } from '@/stores/modal';
-import { toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 const { hiddenClass, toggleModal } = toRefs(useModalStore());
+const tab = ref<'login' | 'register'>('login');
+const handleTapChange = (selectedTab: 'login' | 'register') => {
+  pr(selectedTab);
+  tab.value = selectedTab;
+};
 </script>
