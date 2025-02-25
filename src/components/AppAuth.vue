@@ -80,12 +80,14 @@
               Submit
             </button>
           </form>
+
           <!-- Registration Form -->
-          <form v-show="tab == 'register'">
+          <Form v-show="tab == 'register'" :validation-schema="schema">
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
-              <input
+              <Field
+                name="name"
                 type="text"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Enter Name"
@@ -148,7 +150,7 @@
             >
               Submit
             </button>
-          </form>
+          </Form>
         </div>
       </div>
     </div>
@@ -158,11 +160,21 @@
 <script setup lang="ts">
 import { pr } from '@/pr';
 import { useModalStore } from '@/stores/modal';
+import { Field, Form } from 'vee-validate';
 import { ref, toRefs } from 'vue';
 const { hiddenClass, toggleModal } = toRefs(useModalStore());
 const tab = ref<'login' | 'register'>('login');
 const handleTapChange = (selectedTab: 'login' | 'register') => {
   pr(selectedTab);
   tab.value = selectedTab;
+};
+const schema = {
+  name: 'required',
+  email: '',
+  age: '',
+  password: '',
+  confirm_password: '',
+  country: '',
+  tos: '',
 };
 </script>

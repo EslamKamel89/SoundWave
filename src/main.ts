@@ -5,12 +5,12 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 
 import App from './App.vue';
-import validationPlugin from './includes/validation';
+// import validationPlugin from './includes/validation';
+import veeValidateRules from './includes/validation';
 import router from './router';
 
 const app = createApp(App);
 app.use(createPinia());
 app.use(router);
-app.use(validationPlugin);
-
+veeValidateRules();
 app.mount('#app');
