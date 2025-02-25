@@ -7,9 +7,12 @@
 //   },
 // };
 // export default validationPlugin;
-import { required } from '@vee-validate/rules';
+import { alpha_spaces, max, min, required } from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
 
 export default function veeValidateRules() {
   defineRule('required', required);
+  defineRule('min', min);
+  defineRule('max', max);
+  defineRule('alpha_spaces', alpha_spaces);
 }
