@@ -210,7 +210,7 @@ const schema = {
   password: 'required|min:3|max:100',
   confirm_password: 'required|confirmed:@password',
   country: { required: true, one_of: ['USA', 'Mexico', 'Germany'] },
-  tos: { required: true, one_of: [true] },
+  tos: 'tos',
 };
 
 const register = (values: unknown) => {
