@@ -82,7 +82,12 @@
           </form>
 
           <!-- Registration Form -->
-          <Form v-show="tab == 'register'" :validation-schema="schema">
+          <Form
+            v-show="tab == 'register'"
+            :validation-schema="schema"
+            @submit="register"
+            :initial-values="userData"
+          >
             <!-- Name -->
             <div class="mb-3">
               <label class="inline-block mb-2">Name</label>
@@ -123,6 +128,7 @@
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Password"
+                :bails="false"
               />
               <ErrorMessage name="password" class="text-red-500" />
             </div>
@@ -145,6 +151,7 @@
                 name="country"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               >
+                <option value="PALASTINE">PALASTINE</option>
                 <option value="USA">USA</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Germany">Germany</option>
@@ -182,10 +189,18 @@ import { pr } from '@/pr';
 import { useModalStore } from '@/stores/modal';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref, toRefs } from 'vue';
+type RegisterForm = {
+  name: string;
+  email: string;
+  age: number;
+  password: string;
+  confirm_password: string;
+  country: string;
+  tos: string;
+};
 const { hiddenClass, toggleModal } = toRefs(useModalStore());
 const tab = ref<'login' | 'register'>('login');
 const handleTapChange = (selectedTab: 'login' | 'register') => {
-  pr(selectedTab);
   tab.value = selectedTab;
 };
 const schema = {
@@ -197,4 +212,13 @@ const schema = {
   country: { required: true, one_of: ['USA', 'Mexico', 'Germany'] },
   tos: { required: true, one_of: [true] },
 };
+
+const register = (values: unknown) => {
+  const formData = values as RegisterForm;
+  pr(formData);
+};
+
+const userData = ref<Partial<RegisterForm>>({
+  country: 'PALASTINE',
+});
 </script>
