@@ -140,18 +140,29 @@
             <!-- Country -->
             <div class="mb-3">
               <label class="inline-block mb-2">Country</label>
-              <select
+              <Field
+                as="select"
+                name="country"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               >
                 <option value="USA">USA</option>
                 <option value="Mexico">Mexico</option>
                 <option value="Germany">Germany</option>
-              </select>
+              </Field>
+              <ErrorMessage name="country" class="text-red-500" />
             </div>
             <!-- TOS -->
             <div class="mb-3 pl-6">
-              <input type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
+              <Field
+                name="tos"
+                type="checkbox"
+                value="1"
+                class="w-4 h-4 float-left -ml-6 mt-1 rounded"
+              />
               <label class="inline-block">Accept terms of service</label>
+              <div>
+                <ErrorMessage name="tos" class="text-red-500" />
+              </div>
             </div>
             <button
               type="submit"
@@ -183,7 +194,7 @@ const schema = {
   age: 'required|integer|numeric|min_value:6|max_value:130',
   password: 'required|min:3|max:100',
   confirm_password: 'required|confirmed:@password',
-  country: '',
-  tos: '',
+  country: { required: true, one_of: ['USA', 'Mexico', 'Germany'] },
+  tos: { required: true, one_of: [true] },
 };
 </script>

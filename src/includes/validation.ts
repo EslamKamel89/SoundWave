@@ -12,11 +12,13 @@ import {
   confirmed,
   email,
   integer,
+  is,
   max,
   max_value,
   min,
   min_value,
   numeric,
+  one_of,
   required,
 } from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
@@ -32,4 +34,6 @@ export default function veeValidateRules() {
   defineRule('min_value', min_value);
   defineRule('max_value', max_value);
   defineRule('confirmed', confirmed);
+  defineRule('one_of', one_of);
+  defineRule('is', is);
 }
