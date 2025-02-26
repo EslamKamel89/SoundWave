@@ -108,28 +108,34 @@
             <!-- Age -->
             <div class="mb-3">
               <label class="inline-block mb-2">Age</label>
-              <input
+              <Field
+                name="age"
                 type="number"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
               />
+              <ErrorMessage name="age" class="text-red-500" />
             </div>
             <!-- Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
-              <input
+              <Field
+                name="password"
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Password"
               />
+              <ErrorMessage name="password" class="text-red-500" />
             </div>
             <!-- Confirm Password -->
             <div class="mb-3">
               <label class="inline-block mb-2">Confirm Password</label>
-              <input
+              <Field
+                name="confirm_password"
                 type="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                 placeholder="Confirm Password"
               />
+              <ErrorMessage name="confirm_password" class="text-red-500" />
             </div>
             <!-- Country -->
             <div class="mb-3">
@@ -173,10 +179,10 @@ const handleTapChange = (selectedTab: 'login' | 'register') => {
 };
 const schema = {
   name: 'required|min:3|max:100|alpha_spaces',
-  email: 'required|email',
-  age: '',
-  password: '',
-  confirm_password: '',
+  email: 'required|min:3|max:100|email',
+  age: 'required|integer|numeric|min_value:6|max_value:130',
+  password: 'required|min:3|max:100',
+  confirm_password: 'required|confirmed:@password',
   country: '',
   tos: '',
 };

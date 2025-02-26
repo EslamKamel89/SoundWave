@@ -7,7 +7,18 @@
 //   },
 // };
 // export default validationPlugin;
-import { alpha_spaces, max, min, required } from '@vee-validate/rules';
+import {
+  alpha_spaces,
+  confirmed,
+  email,
+  integer,
+  max,
+  max_value,
+  min,
+  min_value,
+  numeric,
+  required,
+} from '@vee-validate/rules';
 import { defineRule } from 'vee-validate';
 
 export default function veeValidateRules() {
@@ -15,4 +26,10 @@ export default function veeValidateRules() {
   defineRule('min', min);
   defineRule('max', max);
   defineRule('alpha_spaces', alpha_spaces);
+  defineRule('email', email);
+  defineRule('integer', integer);
+  defineRule('numeric', numeric);
+  defineRule('min_value', min_value);
+  defineRule('max_value', max_value);
+  defineRule('confirmed', confirmed);
 }
