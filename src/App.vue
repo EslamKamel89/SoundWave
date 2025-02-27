@@ -271,6 +271,6 @@
 </template>
 
 <script setup lang="ts">
-import AppAuth from '@/components/AppAuth.vue';
+import AppAuth from '@/components/AppAuth/AppAuth.vue';
 import AppHeader from './components/AppHeader.vue';
 </script>
