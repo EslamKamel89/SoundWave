@@ -82,6 +82,13 @@
           </form>
 
           <!-- Registration Form -->
+          <div
+            class="text-white text-center font-bold p-4 rounded mb-4 max-w-[200px] sm:max-w-xs mx-auto text-xs"
+            v-if="regStatus.showAlert"
+            :class="regStatus.alertVariant"
+          >
+            {{ regStatus.alertMsg }}
+          </div>
           <Form
             v-show="tab == 'register'"
             :validation-schema="schema"
@@ -174,6 +181,7 @@
             <button
               type="submit"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700"
+              :disabled="regStatus.inSubmission"
             >
               Submit
             </button>
@@ -213,12 +221,33 @@ const schema = {
   tos: 'tos',
 };
 
-const register = (values: unknown) => {
-  const formData = values as RegisterForm;
-  pr(formData);
-};
-
 const userData = ref<Partial<RegisterForm>>({
   country: 'PALASTINE',
 });
+
+const regStatus = ref({
+  inSubmission: false,
+  showAlert: false,
+  alertVariant: 'transparent',
+  alertMsg: '',
+});
+
+const register = (values: unknown) => {
+  const formData = values as RegisterForm;
+  pr(formData, 'Register form data');
+  regStatus.value.inSubmission = true;
+  regStatus.value.showAlert = true;
+  regStatus.value.alertVariant = 'bg-blue-500';
+  regStatus.value.alertMsg = 'Please Wait you account is being created';
+  setTimeout(() => {
+    regStatus.value.alertVariant = 'bg-green-500';
+    regStatus.value.alertMsg = 'Success, your account has been created';
+    setTimeout(() => {
+      regStatus.value.alertVariant = 'transparent';
+      regStatus.value.alertMsg = '';
+      regStatus.value.inSubmission = false;
+      regStatus.value.showAlert = false;
+    }, 2000);
+  }, 5000);
+};
 </script>

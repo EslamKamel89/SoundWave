@@ -65,5 +65,8 @@ export default function veeValidateRules() {
       }
       return `the field ${ctx.field} is not valid`;
     },
+    validateOnBlur: true,
+    validateOnChange: true,
+    validateOnInput: true,
   });
 }
