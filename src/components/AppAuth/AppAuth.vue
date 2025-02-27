@@ -54,10 +54,10 @@
           </ul>
 
           <!-- Login Form -->
-          <LoginForm v-show="tab == 'login'" />
+          <LoginForm v-if="tab == 'login'" />
 
           <!-- Registration Form -->
-          <RegisterForm v-show="tab == 'register'" />
+          <RegisterForm v-if="tab == 'register'" />
         </div>
       </div>
     </div>
