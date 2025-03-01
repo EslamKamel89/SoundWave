@@ -96,7 +96,9 @@
 </template>
 
 <script setup lang="ts">
+import { fbAuth } from '@/includes/firebase';
 import { pr } from '@/pr';
+import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import RegisterForm from './RegisterForm.vue';
@@ -128,22 +130,31 @@ const regStatus = ref({
   alertVariant: 'transparent',
   alertMsg: '',
 });
-const register = (values: unknown) => {
+const register = async (values: unknown) => {
   const formData = values as RegisterForm;
   pr(formData, 'Register form data');
   regStatus.value.inSubmission = true;
   regStatus.value.showAlert = true;
   regStatus.value.alertVariant = 'bg-blue-500';
   regStatus.value.alertMsg = 'Please Wait you account is being created';
-  setTimeout(() => {
+  let user: UserCredential | null = null;
+  try {
+    user = await createUserWithEmailAndPassword(fbAuth, formData.email, formData.password);
     regStatus.value.alertVariant = 'bg-green-500';
     regStatus.value.alertMsg = 'Success, your account has been created';
-    setTimeout(() => {
-      regStatus.value.alertVariant = 'transparent';
-      regStatus.value.alertMsg = '';
-      regStatus.value.inSubmission = false;
-      regStatus.value.showAlert = false;
-    }, 2000);
-  }, 5000);
+    pr(user, 'RegisterForm - Register');
+  } catch (error) {
+    pr(error, 'RegisterForm - Register');
+    regStatus.value.alertVariant = 'bg-red-500';
+    regStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
+  }
+  regStatus.value.inSubmission = false;
+  setTimeout(() => {
+    regStatus.value.alertVariant = 'transparent';
+    regStatus.value.alertMsg = '';
+    regStatus.value.inSubmission = false;
+    regStatus.value.showAlert = false;
+  }, 3000);
+  return user;
 };
 </script>
