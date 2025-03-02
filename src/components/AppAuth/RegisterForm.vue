@@ -98,8 +98,10 @@
 <script setup lang="ts">
 import { fbAuth, userCollection } from '@/includes/firebase';
 import { pr } from '@/pr';
+import { useUserStore } from '@/stores/user';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth';
 import { addDoc } from 'firebase/firestore';
+import { storeToRefs } from 'pinia';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import RegisterForm from './RegisterForm.vue';
@@ -131,6 +133,7 @@ const regStatus = ref({
   alertVariant: 'transparent',
   alertMsg: '',
 });
+const userStore = storeToRefs(useUserStore());
 const register = async (values: unknown) => {
   const formData = values as RegisterForm;
   pr(formData, 'Register form data');
@@ -138,18 +141,20 @@ const register = async (values: unknown) => {
   regStatus.value.showAlert = true;
   regStatus.value.alertVariant = 'bg-blue-500';
   regStatus.value.alertMsg = 'Please Wait you account is being created';
-  let user: UserCredential | null = null;
+  userStore.isUserLoggedIn.value = false;
+  let userCred: UserCredential | null = null;
   try {
-    user = await createUserWithEmailAndPassword(fbAuth, formData.email, formData.password);
+    userCred = await createUserWithEmailAndPassword(fbAuth, formData.email, formData.password);
     await addDoc(userCollection, {
       name: formData.name,
       email: formData.email,
       age: formData.age,
       country: formData.country,
     });
+    userStore.isUserLoggedIn.value = true;
     regStatus.value.alertVariant = 'bg-green-500';
     regStatus.value.alertMsg = 'Success, your account has been created';
-    pr(user, 'RegisterForm - Register');
+    pr(userCred, 'RegisterForm - Register');
   } catch (error) {
     pr(error, 'RegisterForm - Register');
     regStatus.value.alertVariant = 'bg-red-500';
@@ -162,6 +167,6 @@ const register = async (values: unknown) => {
     regStatus.value.inSubmission = false;
     regStatus.value.showAlert = false;
   }, 3000);
-  return user;
+  return userCred;
 };
 </script>
