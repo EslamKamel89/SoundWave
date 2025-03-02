@@ -96,9 +96,10 @@
 </template>
 
 <script setup lang="ts">
-import { fbAuth } from '@/includes/firebase';
+import { fbAuth, userCollection } from '@/includes/firebase';
 import { pr } from '@/pr';
 import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth';
+import { addDoc } from 'firebase/firestore';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import RegisterForm from './RegisterForm.vue';
@@ -140,6 +141,12 @@ const register = async (values: unknown) => {
   let user: UserCredential | null = null;
   try {
     user = await createUserWithEmailAndPassword(fbAuth, formData.email, formData.password);
+    await addDoc(userCollection, {
+      name: formData.name,
+      email: formData.email,
+      age: formData.age,
+      country: formData.country,
+    });
     regStatus.value.alertVariant = 'bg-green-500';
     regStatus.value.alertMsg = 'Success, your account has been created';
     pr(user, 'RegisterForm - Register');
