@@ -104,7 +104,6 @@ import { addDoc } from 'firebase/firestore';
 import { storeToRefs } from 'pinia';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
-import RegisterForm from './RegisterForm.vue';
 type RegisterForm = {
   name: string;
   email: string;
@@ -137,10 +136,7 @@ const userStore = storeToRefs(useUserStore());
 const register = async (values: unknown) => {
   const formData = values as RegisterForm;
   pr(formData, 'Register form data');
-  regStatus.value.inSubmission = true;
-  regStatus.value.showAlert = true;
-  regStatus.value.alertVariant = 'bg-blue-500';
-  regStatus.value.alertMsg = 'Please Wait you account is being created';
+  regStatusLoading(regStatus);
   userStore.isUserLoggedIn.value = false;
   let userCred: UserCredential | null = null;
   try {
@@ -151,22 +147,42 @@ const register = async (values: unknown) => {
       age: formData.age,
       country: formData.country,
     });
-    userStore.isUserLoggedIn.value = true;
-    regStatus.value.alertVariant = 'bg-green-500';
-    regStatus.value.alertMsg = 'Success, your account has been created';
+    regStatusSuccess(regStatus);
     pr(userCred, 'RegisterForm - Register');
   } catch (error) {
+    regStatusFailure(regStatus);
     pr(error, 'RegisterForm - Register');
-    regStatus.value.alertVariant = 'bg-red-500';
-    regStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
   }
-  regStatus.value.inSubmission = false;
   setTimeout(() => {
-    regStatus.value.alertVariant = 'transparent';
-    regStatus.value.alertMsg = '';
-    regStatus.value.inSubmission = false;
-    regStatus.value.showAlert = false;
+    regStatusInitial(regStatus);
   }, 3000);
   return userCred;
+};
+const regStatusLoading = (status: typeof regStatus) => {
+  status.value.inSubmission = true;
+  status.value.showAlert = true;
+  status.value.alertVariant = 'bg-blue-500';
+  status.value.alertMsg = 'Please Wait you account is being created';
+  return status;
+};
+const regStatusSuccess = (status: typeof regStatus) => {
+  userStore.isUserLoggedIn.value = true;
+  regStatus.value.alertVariant = 'bg-green-500';
+  regStatus.value.alertMsg = 'Success, your account has been created';
+  regStatus.value.inSubmission = false;
+  return status;
+};
+const regStatusFailure = (status: typeof regStatus) => {
+  regStatus.value.alertVariant = 'bg-red-500';
+  regStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
+  regStatus.value.inSubmission = false;
+  return status;
+};
+const regStatusInitial = (status: typeof regStatus) => {
+  regStatus.value.alertVariant = 'transparent';
+  regStatus.value.alertMsg = '';
+  regStatus.value.inSubmission = false;
+  regStatus.value.showAlert = false;
+  return status;
 };
 </script>
