@@ -272,5 +272,12 @@
 
 <script setup lang="ts">
 import AppAuth from '@/components/AppAuth/AppAuth.vue';
+import { onBeforeMount } from 'vue';
 import AppHeader from './components/AppHeader.vue';
+import { fbAuth } from './includes/firebase';
+import { useUserStore } from './stores/user';
+const userStore = useUserStore();
+onBeforeMount(() => {
+  userStore.isUserLoggedIn = fbAuth.currentUser !== null;
+});
 </script>
