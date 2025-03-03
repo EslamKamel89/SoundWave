@@ -96,12 +96,9 @@
 </template>
 
 <script setup lang="ts">
-import { fbAuth, userCollection } from '@/includes/firebase';
 import { pr } from '@/pr';
 import { useUserStore } from '@/stores/user';
-import { createUserWithEmailAndPassword, type UserCredential } from 'firebase/auth';
-import { addDoc } from 'firebase/firestore';
-import { storeToRefs } from 'pinia';
+import { type UserCredential } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 type RegisterForm = {
@@ -132,21 +129,14 @@ const regStatus = ref({
   alertVariant: 'transparent',
   alertMsg: '',
 });
-const userStore = storeToRefs(useUserStore());
+const userStore = useUserStore();
 const register = async (values: unknown) => {
   const formData = values as RegisterForm;
   pr(formData, 'Register form data');
   regStatusLoading(regStatus);
-  userStore.isUserLoggedIn.value = false;
   let userCred: UserCredential | null = null;
   try {
-    userCred = await createUserWithEmailAndPassword(fbAuth, formData.email, formData.password);
-    await addDoc(userCollection, {
-      name: formData.name,
-      email: formData.email,
-      age: formData.age,
-      country: formData.country,
-    });
+    userCred = await userStore.register(formData);
     regStatusSuccess(regStatus);
     pr(userCred, 'RegisterForm - Register');
   } catch (error) {
@@ -166,7 +156,6 @@ const regStatusLoading = (status: typeof regStatus) => {
   return status;
 };
 const regStatusSuccess = (status: typeof regStatus) => {
-  userStore.isUserLoggedIn.value = true;
   regStatus.value.alertVariant = 'bg-green-500';
   regStatus.value.alertMsg = 'Success, your account has been created';
   regStatus.value.inSubmission = false;
