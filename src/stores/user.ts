@@ -1,6 +1,6 @@
 import { fbAuth, userCollection } from '@/includes/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { addDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -15,7 +15,8 @@ export const useUserStore = defineStore('user', () => {
   }) => {
     isUserLoggedIn.value = false;
     const userCred = await createUserWithEmailAndPassword(fbAuth, data.email, data.password);
-    await addDoc(userCollection, data);
+    await setDoc(doc(userCollection, userCred.user.uid), data);
+    await updateProfile(fbAuth.currentUser!, { displayName: data.name });
     isUserLoggedIn.value = true;
     return userCred;
   };
