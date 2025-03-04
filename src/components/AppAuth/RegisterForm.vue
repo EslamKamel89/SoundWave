@@ -133,45 +133,41 @@ const userStore = useUserStore();
 const register = async (values: unknown) => {
   const formData = values as RegisterForm;
   pr(formData, 'Register form data');
-  regStatusLoading(regStatus);
+  regStatusLoading();
   let userCred: UserCredential | null = null;
   try {
     userCred = await userStore.register(formData);
-    regStatusSuccess(regStatus);
+    regStatusSuccess();
     pr(userCred, 'RegisterForm - Register');
   } catch (error) {
-    regStatusFailure(regStatus);
+    regStatusFailure();
     pr(error, 'RegisterForm - Register');
   }
   setTimeout(() => {
-    regStatusInitial(regStatus);
+    regStatusInitial();
   }, 3000);
   return userCred;
 };
-const regStatusLoading = (status: typeof regStatus) => {
-  status.value.inSubmission = true;
-  status.value.showAlert = true;
-  status.value.alertVariant = 'bg-blue-500';
-  status.value.alertMsg = 'Please Wait you account is being created';
-  return status;
+const regStatusLoading = () => {
+  regStatus.value.inSubmission = true;
+  regStatus.value.showAlert = true;
+  regStatus.value.alertVariant = 'bg-blue-500';
+  regStatus.value.alertMsg = 'Please Wait you account is being created';
 };
-const regStatusSuccess = (status: typeof regStatus) => {
+const regStatusSuccess = () => {
   regStatus.value.alertVariant = 'bg-green-500';
   regStatus.value.alertMsg = 'Success, your account has been created';
   regStatus.value.inSubmission = false;
-  return status;
 };
-const regStatusFailure = (status: typeof regStatus) => {
+const regStatusFailure = () => {
   regStatus.value.alertVariant = 'bg-red-500';
   regStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
   regStatus.value.inSubmission = false;
-  return status;
 };
-const regStatusInitial = (status: typeof regStatus) => {
+const regStatusInitial = () => {
   regStatus.value.alertVariant = 'transparent';
   regStatus.value.alertMsg = '';
   regStatus.value.inSubmission = false;
   regStatus.value.showAlert = false;
-  return status;
 };
 </script>

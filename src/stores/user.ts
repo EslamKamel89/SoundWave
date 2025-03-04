@@ -1,5 +1,9 @@
 import { fbAuth, userCollection } from '@/includes/firebase';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
@@ -20,8 +24,15 @@ export const useUserStore = defineStore('user', () => {
     isUserLoggedIn.value = true;
     return userCred;
   };
+  const login = async (data: { email: string; password: string }) => {
+    isUserLoggedIn.value = false;
+    const userCred = await signInWithEmailAndPassword(fbAuth, data.email, data.password);
+    isUserLoggedIn.value = true;
+    return userCred;
+  };
   return {
     isUserLoggedIn,
     register,
+    login,
   };
 });

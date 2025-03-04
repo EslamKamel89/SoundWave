@@ -41,6 +41,8 @@
 
 <script setup lang="ts">
 import { pr } from '@/pr';
+import { useUserStore } from '@/stores/user';
+import type { UserCredential } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import LoginForm from './LoginForm.vue';
@@ -61,23 +63,50 @@ const loginStatus = ref({
   alertVariant: 'transparent',
   alertMsg: '',
 });
+const userStore = useUserStore();
 
-const login = (values: unknown) => {
+const login = async (values: unknown) => {
   const formData = values as LoginForm;
   pr(formData, 'login form data');
+  loginStatusLoading();
+  let userCred: UserCredential | null = null;
+  try {
+    userCred = await userStore.login(formData);
+    loginStatusSuccess();
+    pr(userCred, 'login');
+  } catch (error) {
+    loginStatusFailure();
+    pr(error, 'login error');
+  }
+  setTimeout(() => {
+    loginStatusInitial();
+  }, 3000);
+  return userCred;
+};
+const loginStatusLoading = () => {
   loginStatus.value.inSubmission = true;
   loginStatus.value.showAlert = true;
   loginStatus.value.alertVariant = 'bg-blue-500';
-  loginStatus.value.alertMsg = 'Please Wait';
-  setTimeout(() => {
-    loginStatus.value.alertVariant = 'bg-green-500';
-    loginStatus.value.alertMsg = 'Success, your are logged in';
-    setTimeout(() => {
-      loginStatus.value.alertVariant = 'transparent';
-      loginStatus.value.alertMsg = '';
-      loginStatus.value.inSubmission = false;
-      loginStatus.value.showAlert = false;
-    }, 2000);
-  }, 5000);
+  loginStatus.value.alertMsg = 'Please Wait...';
+  return loginStatus;
+};
+const loginStatusSuccess = () => {
+  loginStatus.value.alertVariant = 'bg-green-500';
+  loginStatus.value.alertMsg = 'Success, your are logged in';
+  loginStatus.value.inSubmission = false;
+  return loginStatus;
+};
+const loginStatusFailure = () => {
+  loginStatus.value.alertVariant = 'bg-red-500';
+  loginStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
+  loginStatus.value.inSubmission = false;
+  return loginStatus;
+};
+const loginStatusInitial = () => {
+  loginStatus.value.alertVariant = 'transparent';
+  loginStatus.value.alertMsg = '';
+  loginStatus.value.inSubmission = false;
+  loginStatus.value.showAlert = false;
+  return loginStatus;
 };
 </script>
