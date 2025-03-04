@@ -98,7 +98,7 @@ const loginStatusSuccess = () => {
 };
 const loginStatusFailure = () => {
   loginStatus.value.alertVariant = 'bg-red-500';
-  loginStatus.value.alertMsg = "We're sorry, something went wrong. Please try again in a moment.";
+  loginStatus.value.alertMsg = 'Invalid login details';
   loginStatus.value.inSubmission = false;
   return loginStatus;
 };
