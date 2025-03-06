@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores/user';
 import AboutView from '@/views/AboutView.vue';
 import HomeView from '@/views/HomeView.vue';
 import ManageView from '@/views/ManageView.vue';
@@ -18,6 +19,14 @@ const routes: RouteRecordRaw[] = [
     alias: ['/manage-audio', '/manage-songs'],
     name: 'manage',
     component: ManageView,
+    beforeEnter: (to, from, next) => {
+      const { isUserLoggedIn } = useUserStore();
+      if (isUserLoggedIn) {
+        next();
+      } else {
+        next({ name: 'home' });
+      }
+    },
   },
   {
     path: '/manage',
@@ -33,5 +42,9 @@ const router = createRouter({
   linkExactActiveClass: '!text-yellow-500',
   routes,
 });
-
+// router.beforeEach((to, from, next) => {
+//   pr(to, 'to - Global Guard');
+//   pr(from, 'from - Global Guard');
+//   next();
+// });
 export default router;
