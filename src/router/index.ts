@@ -14,9 +14,18 @@ const routes: RouteRecordRaw[] = [
     component: AboutView,
   },
   {
-    path: '/manage',
+    path: '/manage-music',
+    alias: ['/manage-audio', '/manage-songs'],
     name: 'manage',
     component: ManageView,
+  },
+  {
+    path: '/manage',
+    redirect: { name: 'manage' },
+  },
+  {
+    path: '/:catchAll(.*)*',
+    redirect: { name: 'home' },
   },
 ];
 const router = createRouter({
