@@ -1,6 +1,7 @@
 import AboutView from '@/views/AboutView.vue';
 import HomeView from '@/views/HomeView.vue';
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import ManageView from '@/views/ManageView.vue';
+import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -12,9 +13,14 @@ const routes: RouteRecordRaw[] = [
     name: 'About',
     component: AboutView,
   },
+  {
+    path: '/manage',
+    name: 'Manage',
+    component: ManageView,
+  },
 ];
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
 
