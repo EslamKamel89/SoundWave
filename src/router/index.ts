@@ -5,22 +5,23 @@ import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-rou
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: HomeView,
   },
   {
     path: '/about',
-    name: 'About',
+    name: 'about',
     component: AboutView,
   },
   {
     path: '/manage',
-    name: 'Manage',
+    name: 'manage',
     component: ManageView,
   },
 ];
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
+  linkExactActiveClass: '!text-yellow-500',
   routes,
 });
 
