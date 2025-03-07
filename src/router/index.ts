@@ -9,6 +9,8 @@ export const AppRouteNames = {
   about: 'about',
   manage: 'manage',
 };
+
+export const protectedRoutes = [AppRouteNames.manage];
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -49,8 +51,7 @@ const router = createRouter({
   routes,
 });
 // router.beforeEach((to, from, next) => {
-//   pr(to, 'to - Global Guard');
-//   pr(from, 'from - Global Guard');
+//   pr(router.currentRoute.value.name);
 //   next();
 // });
 export default router;

@@ -1,5 +1,5 @@
 import { fbAuth, userCollection } from '@/includes/firebase';
-import router, { AppRouteNames } from '@/router';
+import router, { AppRouteNames, protectedRoutes } from '@/router';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -39,7 +39,9 @@ export const useUserStore = defineStore('user', () => {
   const logout = async () => {
     await signOut(fbAuth);
     isUserLoggedIn.value = false;
-    router.push({ name: AppRouteNames.home });
+    if (protectedRoutes.find((e) => e == router.currentRoute.value.name)) {
+      router.push({ name: AppRouteNames.home });
+    }
   };
   return {
     isUserLoggedIn,
