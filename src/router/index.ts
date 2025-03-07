@@ -3,21 +3,27 @@ import AboutView from '@/views/AboutView.vue';
 import HomeView from '@/views/HomeView.vue';
 import ManageView from '@/views/ManageView.vue';
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
+
+export const AppRouteNames = {
+  home: 'home',
+  about: 'about',
+  manage: 'manage',
+};
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
+    name: AppRouteNames.home,
     component: HomeView,
   },
   {
     path: '/about',
-    name: 'about',
+    name: AppRouteNames.about,
     component: AboutView,
   },
   {
     path: '/manage-music',
     alias: ['/manage-audio', '/manage-songs'],
-    name: 'manage',
+    name: AppRouteNames.manage,
     component: ManageView,
     beforeEnter: (to, from, next) => {
       const { isUserLoggedIn } = useUserStore();
