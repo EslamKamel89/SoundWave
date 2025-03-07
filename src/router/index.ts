@@ -10,31 +10,33 @@ export const AppRouteNames = {
   manage: 'manage',
 };
 
-export const protectedRoutes = [AppRouteNames.manage];
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: AppRouteNames.home,
     component: HomeView,
+    meta: { requireAuth: false },
   },
   {
     path: '/about',
     name: AppRouteNames.about,
     component: AboutView,
+    meta: { requireAuth: false },
   },
   {
     path: '/manage-music',
     alias: ['/manage-audio', '/manage-songs'],
     name: AppRouteNames.manage,
     component: ManageView,
-    beforeEnter: (to, from, next) => {
-      const { isUserLoggedIn } = useUserStore();
-      if (isUserLoggedIn) {
-        next();
-      } else {
-        next({ name: 'home' });
-      }
-    },
+    meta: { requireAuth: true },
+    // beforeEnter: (to, from, next) => {
+    //   const { isUserLoggedIn } = useUserStore();
+    //   if (isUserLoggedIn) {
+    //     next();
+    //   } else {
+    //     next({ name: 'home' });
+    //   }
+    // },
   },
   {
     path: '/manage',
@@ -50,8 +52,11 @@ const router = createRouter({
   linkExactActiveClass: '!text-yellow-500',
   routes,
 });
-// router.beforeEach((to, from, next) => {
-//   pr(router.currentRoute.value.name);
-//   next();
-// });
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth && !useUserStore().isUserLoggedIn) {
+    next({ name: AppRouteNames.home });
+  } else {
+    next();
+  }
+});
 export default router;
