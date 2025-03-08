@@ -48,10 +48,21 @@
 </template>
 
 <script setup lang="ts">
+import { pr } from '@/pr';
 import { ref } from 'vue';
 
 const isDragOver = ref(false);
-const upload = () => {
+const upload = (e: DragEvent) => {
   isDragOver.value = false;
+  if (!e.dataTransfer || !e.dataTransfer.files) return;
+  pr(e, 'upload file');
+  pr(e.dataTransfer.files, 'files raw');
+  const files = Object.values(e.dataTransfer.files);
+  files.forEach((file) => {
+    pr(file, 'Single file');
+    if (file.type !== 'audio/mpeg') {
+      return;
+    }
+  });
 };
 </script>
